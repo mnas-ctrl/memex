@@ -1,0 +1,67 @@
+[cerebrium.deployment]
+# Nama unik untuk deployment Anda di Cerebrium
+name = "my-ai-deployment"
+
+# Versi Python yang digunakan di dalam environment (disarankan 3.10 atau 3.11)
+python_version = "3.11"
+
+# Base image Docker yang digunakan sebagai pondasi sistem
+docker_base_image_url = "debian:bookworm-slim"
+
+# Daftar file atau direktori yang WAJIB disertakan saat proses build dan deployment
+include = [
+    "./*", 
+        "main.py", 
+            "cerebrium.toml"
+            ]
+
+            # Daftar file atau direktori yang akan diabaikan agar tidak memperberat image
+            exclude = [
+                ".*", 
+                    "tests/*", 
+                        "*.log", 
+                            "__pycache__/*"
+                            ]
+
+                            # (Opsional) File utama atau entrypoint untuk menjalankan aplikasi
+                            # entrypoint = "main.py"
+
+                            # (Opsional) Port khusus yang akan digunakan aplikasi untuk menerima request
+                            # port = 8080
+
+                            [cerebrium.hardware]
+                            # Alokasi jumlah vCPU (Virtual CPU) yang BESAR
+                            cpu = 16
+
+                            # Alokasi memori RAM sistem dalam Gigabyte (GB) yang BESAR
+                            memory = 128.0
+
+                            # Jenis kartu grafis / GPU yang akan di-provisioning
+                            # Diubah ke AMPERE_A100 untuk menangani komputasi skala besar/berat
+                            compute = "AMPERE_A100"
+
+                            # Jumlah GPU yang dibutuhkan untuk instance ini
+                            gpu_count = 1
+
+                            # Penyedia cloud tempat infrastruktur akan berjalan (misal: aws, gcp)
+                            provider = "aws"
+
+                            # Region tempat server berada
+                            region = "us-east-1"
+
+                            [cerebrium.dependencies.pip]
+                            # Daftar pustaka (library) Python yang akan diinstal langsung via pip
+                            # Anda dapat menentukan versinya secara spesifik atau menggunakan "latest"
+                            vllm = "latest"
+                            torch = "==2.1.2"
+                            transformers = "==4.36.2"
+                            huggingface_hub = "latest"
+
+                            # -------------------------------------------------------------------------
+                            # JIKA ANDA INGIN MENGGUNAKAN requirements.txt SEBAGAI SUMBER DEPENDENSI:
+                            # Hapus komentar (uncomment) pada dua baris di bawah ini, lalu hapus atau 
+                            # berikan komentar pada block [cerebrium.dependencies.pip] di atas.
+                            # -------------------------------------------------------------------------
+                            # [cerebrium.dependencies.paths]
+                            # pip = "requirements.txt"
+                            
